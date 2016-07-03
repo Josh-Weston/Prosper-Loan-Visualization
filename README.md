@@ -1,4 +1,4 @@
-# Prosper-Loan-Visualization
+# Prosper Loan Visualization
 ##Summary:
 In no more than 4 sentences, briefly introduce your visualization and add any context that can help readers understand it.
 ##Design:
