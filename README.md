@@ -9,5 +9,6 @@ Include all feedback you received from others on yoru visualiaztion from the fir
 
 **Discussion on how much data d3.js can handle**
 https://www.quora.com/Does-D3-js-work-efficiently-on-massive-amounts-of-data-200-million-rows-with-at-least-a-dozen-columns
+
 **US Credit Score Categories**
 http://www.credit.org/what-is-a-good-credit-score-infographic/
