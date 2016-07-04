@@ -12,3 +12,6 @@ https://www.quora.com/Does-D3-js-work-efficiently-on-massive-amounts-of-data-200
 
 **US Credit Score Categories**
 http://www.credit.org/what-is-a-good-credit-score-infographic/
+
+**Sanity check when struggling with version issue**
+http://annapawlicka.com/pretty-charts-with-dimple-js/
