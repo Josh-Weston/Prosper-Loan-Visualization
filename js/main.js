@@ -59,7 +59,7 @@ function DataModel() {
                         .rollup(loanCount)
                         .entries(data);
         
-        self.countData = self.flattenObject(nested);
+        self.countData = self.flattenObject(nested, 'count');
         
         //Get aggregated APR data.
         nested = d3.nest()
@@ -76,16 +76,32 @@ function DataModel() {
                 .rollup(rateAvg)
                 .entries(data);
 
+        self.rateData = self.flattenObject(nested, 'rateAverage');
         
-        self.rateData = self.flattenObject(nested);
+        /*
+        console.log(self.rateData);
+        var svg = dimple.newSvg('#chart-area', 600, 400);
+        var myChart = new dimple.chart(svg, self.rateData);
+        myChart.setBounds(60, 30, 510, 330);
         
+        myChart.addCategoryAxis('x', ['creditCategory']);
+        myChart.addMeasureAxis('y', 'rateAverage');
+        myChart.addSeries('creditCategory', dimple.plot.bar);
+        myChart.addLegend(60, 10, 500, 20, "right");
+        myChart.draw();
+        */
         
-        //Dimple cannot use nested??
-        //var myChart = new dimple.chart(svg, nested);
-        
-    
-        //var x = myChart.addCategoryAxis('x', 'LoanOriginationQuarter');
-        //myChart.draw();
+          var svg = dimple.newSvg("#chart-area", 490, 430);
+          d3.csv("data/Birds.csv", function(data) {
+              console.log(data);
+              var myChart = new dimple.chart(svg, data);
+              myChart.setBounds(60, 10, 400, 330)
+              var x = myChart.addCategoryAxis("x", ["SPECIES"]);
+              myChart.addMeasureAxis("y", "D/S");
+              var s = myChart.addSeries("SPECIES", dimple.plot.bar);
+              s.barGap = 0.05;
+              myChart.draw();
+          });
         
         
         /*
@@ -137,27 +153,24 @@ function DataModel() {
     /*Dimple.js will not handle nested JSON objects. Need to flatten for each view.
       Pushes a new flat object for each nested entry.
     */
-    self.flattenObject = function(nested) {
+    self.flattenObject = function(nested, prop) {
 
         var dataArray = [];
         for (var i = 0, len = nested.length; i < len; i++) {
-            
-            var dataObj = {};
-            
-            //Grab the quarter.
-            dataObj['quarter'] = nested[i]['key'];
+        
             //Grab the entry for each category.
             for (var j = 0, jlen = nested[i]['values'].length; j < jlen; j++) {
                 
-                dataObj[nested[i]['values'][j]['key']] = 
-                    nested[i]['values'][j]['value'];
+                var dataObj = {};
+                //Grab the info for each entry
+                dataObj['quarter'] = nested[i]['key'];
+                dataObj['creditCategory'] = nested[i]['values'][j]['key'];
+                dataObj[prop] = nested[i]['values'][j]['value'];
+                dataArray.push(dataObj);
                 
             }
-            
-            dataArray.push(dataObj);
-            
-        }
 
+        }
         return dataArray;
         
     };
