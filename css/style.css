@@ -12,7 +12,7 @@
     
 }
 
-.annotation {
+#annotation {
     
     position: absolute;
     z-index: 100;
@@ -70,7 +70,7 @@ h1, h4 {
 
 button {
     
-    cursor: pointer;
+    cursor: not-allowed;
     font-size: 14px;
     margin-right: 20px;
     width: 200px;
@@ -131,6 +131,49 @@ button {
 .subprime {
     
     background-color: rgb(210, 107, 95);
+    
+}
+
+#chart-area-cover {
+    
+    position: absolute;
+    width: 1400px;
+    background-color: white;
+    top: 0;
+    left; 0;
+    z-index: 101;
+    border: 3px dashed #777;
+    height: 600px;
+    margin-top: 50px;
+    text-align: center;
+    cursor: pointer;
+}
+
+#chart-area-cover:hover {
+    
+    background-color: #eee;
+    
+}
+
+.play-story {
+    
+    font-family: 'Open Sans', sans-serif;
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    font-size: 32px;
+    text-transform: uppercase;
+    
+}
+
+.play-button {
+    
+    background-image: url(../img/btnPlay.png);
+    height: 48px;
+    width: 48px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-bottom: 10px;
     
 }
 

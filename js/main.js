@@ -108,8 +108,12 @@ function DataModel() {
             self.drawChart(self.totalData, 'measureAxis', 'totalAmount', 'Total Amount Loaned ($)');
         });
         
+        d3.select('#chart-area-cover').on('click', function() {
+            self.viewStoryBoard(self.countData);
+        });
+        
         //Draw initial chart
-        self.drawChart(self.countData, 'measureAxis', 'count', 'Total New Loans Issued (#)');
+        //self.drawChart(self.countData, 'measureAxis', 'count', 'Total New Loans Issued (#)');
         
     };
     
@@ -204,12 +208,157 @@ function DataModel() {
     };
     
     /* Provides interactive explanation of the main story behind the visualization */
+    /* Draw series and annotations in specific sequence */
     /* Click to walk-through */
-    self.viewStoryBoard = function() {
+    self.viewStoryBoard = function(data) {
+        
+        //Clear any prior chart and cover.
+        d3.select('#chart-area').html('');
+        
+        //Find max across entire set to manually set y-axis.
+        var max = d3.max(data, function(d) {
+            return d.count;
+        })
+        
+        var subPrime = dimple.filterData(data, 'creditCategory', 'Subprime'),
+            preCrash = [];
+        
+        for (var i = 0, len = subPrime.length; i < len; i++) {
+            
+            if (subPrime[i]['quarter'] < '2009 Q1') {
+                preCrash.push(subPrime[i]);
+            }
+        
+        }
+        
+        var svg = dimple.newSvg('#chart-area', 1400, 700),
+            myChart = new dimple.chart(svg, preCrash);
+        
+        myChart.setBounds(60, 50, 1350, 600);
+        
+        var x = myChart.addCategoryAxis('x', 'quarter');
+        x.addOrderRule("quarter");
+        x.title = "";
+                
+        var y = myChart.addMeasureAxis('y', 'count')
+        y.title = 'Total New Loans Issued (#)';
+        y.fontSize = "12px";
+        y.overrideMax = max
+        
+        var dataSeries = myChart.addSeries('creditCategory', dimple.plot.line);
+        //var legend = myChart.addLegend(60, 10, 500, 20, "right");
+        myChart.assignColor('Subprime', 'rgb(210, 107, 95)');
+        //myChart.assignColor('Acceptable', 'rgb(211, 150, 81)');
+        //myChart.assignColor('Good', 'rgb(149, 185, 87)');
+        //myChart.assignColor('Excellent', 'rgb(107, 148, 176)');
+        
+        //myChart.assignColor("Coolio", "red", "black", 1); We can set the opacity.
+        
+        myChart.draw(1000);
+        
+        
+        setTimeout(function() {
+            
+            
+            
+            
+            
+            
+            
+            
+       
+        /*Add 2008 crash reference line by creating a hidden y axis.*/
+        var y2 = myChart.addPctAxis('y', "Dummy");
+        y2.hidden = true;
+        
+        var lineSeries = myChart.addSeries("FinancialCrisis", dimple.plot.area, [x, y2]);
+        lineSeries.lineWeight = 5;
+        
+        lineSeries.data = [{
+            FinancialCrisis: "Financial Crisis",
+            Dummy: 1,
+            quarter: "2008 Q4"
+        }]
+        
+        myChart.draw(100);
+            
+            
+            d3.select('#annotation').html('The financial crisis reached its apex at the end of 2008. ' + 
+                                          'Many consumers lost their jobs and their homes, while financial ' +
+                                          'institutions struggled to stay solvent.')
+                                    .style('left', '1000px')
+            
+            
+            
+            
+            
+            
+            setTimeout(function() {
+                
+                
+                for (var i = 0, len = subPrime.length; i < len; i++) {
+
+                    if (subPrime[i]['quarter'] >= '2009 Q1') {
+                        preCrash.push(subPrime[i]);
+                    }
+
+                }
+                
+                
+                dataSeries.afterDraw = function() {
+
+                
+                
+                d3.select('#annotation').html('In response to the crisis, Subprime loans fell out of favour and would not ' +
+                                              'return to pre-crisis levels.')
+                        .style({
+                            left: '900px',
+                            top: '475px'
+                        });
+                    
+                }
+                
+                
+                
+                myChart.draw(1000);
+                
+                
+                
+                
+            }, 1000);
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+        }, 1000);
+        
+        //myChart.data = newDataset
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         //Create first annotation
         var div = document.createElement('div');
-        div.className = 'annotation';
+        div.id = 'annotation';
         div.innerHTML = 
         'The financial crisis began in 2007, and was fueled by Subprime lending. ' +
         'Before the eventual crash, Subprime loans were being approved at dangerously ' +
