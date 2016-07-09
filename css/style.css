@@ -1,1 +1,136 @@
 /* Blank CSS File */
+.manual-tooltip {
+    
+    position: fixed;
+    z-index: 100;
+    border: 1px solid silver;
+    border-radius: 5px;
+    background-color: #eee;
+    font-size: 12px;
+    width: 120px;
+    padding: 5px;
+    
+}
+
+.annotation {
+    
+    position: absolute;
+    z-index: 100;
+    border: 1px solid silver;
+    border-radius: 5px;
+    background-color: #eee;
+    width: 200px;
+    top: 280px;
+    left: 175px;
+    font-size: 14px;
+    line-height: 20px;
+    padding: 10px;
+    box-shadow: 2px 1px 5px #888;
+}
+
+#chart-area {
+    
+    width: 1400px;
+    height: 700px;
+    position: relative;
+}
+
+.header-container {
+    
+    font-family: 'Open Sans', sans-serif;
+    width: 70%;
+    
+}
+
+h1, h4 {
+    
+    margin: 0;
+    
+}
+
+.indent {
+    
+    margin-left: 5%;
+    
+}
+
+.source-container {
+    
+    font-size: 12px;
+    margin-top: 20px;
+    
+}
+
+.button-container {
+    
+    margin-top: 30px;
+    display: inline-block;
+    vertical-align: top;
+}
+
+button {
+    
+    cursor: pointer;
+    font-size: 14px;
+    margin-right: 20px;
+    width: 200px;
+    
+}
+
+.legend-container {
+    
+    display: inline-block;
+    border-left: 1px solid black;
+    margin-left: 80px;
+    
+}
+
+.legend {
+    
+    list-style: none;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    padding-left: 80px;
+    
+}
+
+.legend li {
+    
+    margin-bottom: 5px;
+    
+}
+
+.legend-block {
+    
+    height: 15px;
+    width: 30px;
+    float: right;
+    margin-left: 20px;
+    margin-top: 1px;
+    border: 1px solid gray;
+}
+
+.excellent {
+    
+    background-color: rgb(107, 148, 176);
+    
+}
+
+.good {
+    
+    background-color: rgb(149, 185, 87);
+    
+}
+
+.average {
+    
+    background-color: rgb(211, 150, 81);
+    
+}
+
+.subprime {
+    
+    background-color: rgb(210, 107, 95);
+    
+}
+

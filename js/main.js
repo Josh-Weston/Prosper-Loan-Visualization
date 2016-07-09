@@ -3,32 +3,21 @@ function DataModel() {
     var self = this;
     self.countData = [];
     self.rateData = [];
+    self.totalData = [];
     
     /* Retrives data for visualization */
     self.getData = function () {
         
-      d3.csv("data/prosperLoanData_reduced.csv", self.draw);
+      d3.csv("data/prosperLoanData_reduced.csv", self.buildAndBind);
         
     };
     
     //Callback once data has been retrived and loaded.
-    self.draw = function(data) {
-        
-        var margin = 75,
-            width = 1400 - margin,
-            height = 600 - margin;
-
-        d3.select("body")
-            .append("h2")
-            .text("Out of the frying pan, into the fire");
-
-        var svg = d3.select("body")
-            .append("svg")
-            .attr("width", width + margin)
-            .attr("height", height + margin)
-            .append('g')
-            .attr('class', 'chart');
-    
+    self.buildAndBind = function(data) {
+            
+        /*Note: I attempted to use dimple's built-in aggregation methods
+         *but they ran very slowly and would not produce the proper ordering
+        */
         
         //Returns aggregate loan count
         function loanCount(leaves) {
@@ -42,7 +31,17 @@ function DataModel() {
                 return d['BorrowerAPR'];
             });
             
-        }
+        };
+        
+        //Returns total loaned amount for charting
+        function totalAmount(leaves) {
+            
+            return d3.sum(leaves, function(d) {
+                
+                return d['LoanOriginalAmount'];
+            });
+            
+        };
         
         //Get aggregated count data.
         var nested = d3.nest()
@@ -78,74 +77,173 @@ function DataModel() {
 
         self.rateData = self.flattenObject(nested, 'rateAverage');
         
-        /*
-        console.log(self.rateData);
-        var svg = dimple.newSvg('#chart-area', 600, 400);
-        var myChart = new dimple.chart(svg, self.rateData);
-        myChart.setBounds(60, 30, 510, 330);
-        
-        myChart.addCategoryAxis('x', ['creditCategory']);
-        myChart.addMeasureAxis('y', 'rateAverage');
-        myChart.addSeries('creditCategory', dimple.plot.bar);
-        myChart.addLegend(60, 10, 500, 20, "right");
-        myChart.draw();
-        */
-        
-          var svg = dimple.newSvg("#chart-area", 490, 430);
-          d3.csv("data/Birds.csv", function(data) {
-              console.log(data);
-              var myChart = new dimple.chart(svg, data);
-              myChart.setBounds(60, 10, 400, 330)
-              var x = myChart.addCategoryAxis("x", ["SPECIES"]);
-              myChart.addMeasureAxis("y", "D/S");
-              var s = myChart.addSeries("SPECIES", dimple.plot.bar);
-              s.barGap = 0.05;
-              myChart.draw();
-          });
-        
-        
-        /*
-        var x = myChart.addTimeAxis("x", "year"); 
-          x.dateParseFormat = "%Y";
-          x.tickFormat = "%Y";
-          x.timeInterval = 4;
-          myChart.addMeasureAxis("y", "attendance");
-          myChart.addSeries(null, dimple.plot.line)//.lineMarkers = true;
-          myChart.addSeries(null, dimple.plot.scatter); //Same as adding line markers.
-          myChart.draw();
-        */
-        
-        /*
-              svg.append('g')
-                .attr('class', 'bubble')
-                .selectAll('circle')
-                .data(nested.sort(function(a, b) {
-                  
-                  return b.values.attendance - a.values.attendance;
-                  
-                }), key_func)
-                .enter()
-                .append('circle')
-                .attr('cx', function(d) {
-                  
-                  return d.values.x
+        //Get aggregated total Loan Amount Data
+        nested = d3.nest()
+                .key(function (d) {
+
+                    return d['LoanOriginationQuarter'];
+
+                }).sortKeys(d3.ascending)
+                .key(function (d) {
+
+                    return d['CreditCategory'];
+
                 })
-                .attr('cy', function(d) {
-                  
-                  return d.values.y
-                  
-              })
-              .attr('r', function(d) {
-                 
-                  return radius(d.values.attendance);
-                  
-              })
-              .attr('fill', 'rgb(247, 148, 32)')
-              .attr('stroke', 'black')
-              .attr('stroke-width', 0.7)
-              .attr('opacity', 0.7)
-              
-          };
+                .rollup(totalAmount)
+                .entries(data);
+        
+        self.totalData = self.flattenObject(nested, 'totalAmount');
+        
+
+        //Interface Listeners
+        d3.select('#btnNumberOfLoans').on('click', function() {
+            self.drawChart(self.countData, 'measureAxis', 'count', 'Total New Loans Issued (#)');
+        });
+        
+        d3.select('#btnAverageInterestRate').on('click', function() {
+            self.drawChart(self.rateData, 'percent', 'rateAverage', 'Average Interest Rate Issued (%)');
+        });
+        
+        d3.select('#btnTotalAmountLoaned').on('click', function() {
+            self.drawChart(self.totalData, 'measureAxis', 'totalAmount', 'Total Amount Loaned ($)');
+        });
+        
+        //Draw initial chart
+        self.drawChart(self.countData, 'measureAxis', 'count', 'Total New Loans Issued (#)');
+        
+    };
+    
+    /* Draw Function abstracted to avoid duplicate code */
+    self.drawChart = function(data, axisType, measure, yLabel, yFormat) {
+        
+        //Clear any prior chart.
+        d3.select('#chart-area').html('');
+        
+        var svg = dimple.newSvg('#chart-area', 1400, 700),
+            myChart = new dimple.chart(svg, data);
+        
+        myChart.setBounds(60, 50, 1350, 600);
+        
+        var x = myChart.addCategoryAxis('x', 'quarter');
+        x.addOrderRule("quarter");
+        x.title = "";
+        
+        var y = axisType === 'percent' ? myChart.addPctAxis('y', measure) : myChart.addMeasureAxis('y', measure)
+        y.title = yLabel;
+        y.fontSize = "12px";
+        
+        var dataSeries = myChart.addSeries('creditCategory', dimple.plot.line);
+        //var legend = myChart.addLegend(60, 10, 500, 20, "right");
+        myChart.assignColor('Subprime', 'rgb(210, 107, 95)');
+        myChart.assignColor('Acceptable', 'rgb(211, 150, 81)');
+        myChart.assignColor('Good', 'rgb(149, 185, 87)');
+        myChart.assignColor('Excellent', 'rgb(107, 148, 176)');
+               
+        /*Add 2008 crash reference line by creating a hidden y axis.*/
+        var y2 = myChart.addPctAxis('y', "Dummy");
+        y2.hidden = true;
+        
+        var lineSeries = myChart.addSeries("FinancialCrisis", dimple.plot.area, [x, y2]);
+        lineSeries.lineWeight = 5;
+        
+        lineSeries.data = [{
+            FinancialCrisis: "Financial Crisis",
+            Dummy: 1,
+            quarter: "2008 Q4"
+        }]
+        
+        //Do not show vertical line in the legend.
+        //legend.series = [dataSeries];
+        
+        //Draw the chart.
+        myChart.draw(1000);
+        
+        //Rotate the x-axis labels.
+        x.shapes.selectAll("text").attr("transform", "rotate(45)");
+        
+        //Remove reference line marker and change the line styling.
+        d3.select(lineSeries._markers['dimple-financial-crisis'][0][0]).style('display', 'none');
+        //Change color and opacity of dividing line.
+        d3.select(lineSeries.shapes[0][0]).style({
+            stroke: '#000',
+            opacity: 0.7,
+            cursor: 'pointer'
+        });
+
+        //Show manual tooltip
+        var lineEl = lineSeries.shapes[0][0];
+        lineEl.addEventListener('mouseover', function(event){
+            
+            var x = event.clientX + 10,
+                y = event.clientY;
+            
+            //Remove any existing.
+            d3.selectAll('.manual-tooltip').remove();
+            
+            //Add a new one.
+            var div = document.createElement('div');
+            div.className = 'manual-tooltip';
+            div.innerHTML = "The financial crisis at it's worst in 2008 Q4";
+            
+            d3.select(div).style('top', y + 'px');
+            d3.select(div).style('left', x + 'px');
+
+            document.body.appendChild(div);
+            
+        });
+        
+        lineEl.addEventListener('mouseout', function(event){
+            
+            //Remove any existing.
+            d3.selectAll('.manual-tooltip').remove();
+            
+        });
+        
+        self.viewStoryBoard();
+        
+    };
+    
+    /* Provides interactive explanation of the main story behind the visualization */
+    /* Click to walk-through */
+    self.viewStoryBoard = function() {
+        
+        //Create first annotation
+        var div = document.createElement('div');
+        div.className = 'annotation';
+        div.innerHTML = 
+        'The financial crisis began in 2007, and was fueled by Subprime lending. ' +
+        'Before the eventual crash, Subprime loans were being approved at dangerously ' +
+        'high frequencies without proper assurances.';
+        
+        
+        //Needs to be set-up as absolute and appended to the chart-area.
+        document.getElementById('chart-area').appendChild(div);
+        
+        div.style.top = top + 'px';
+        div.style.left = left + 'px';
+
+        
+        /*
+        The financial crisis reached its apex at the end of 2008. Many consumers
+        lost their jobs and their homes, while financial institutions struggled
+        to stay solvent.
+        */
+        
+        /*
+        In response to the crisis, Subprime loans fell out of favour and would not
+        return to pre-crisis levels. */
+        
+        /*
+        To stimulte the economy, interest rates were reduced while consumers were
+        encouraged to spend more. The resulting low rates and increased consumerism
+        caused a steady rise in consumer debt.
+        */
+        
+        /*
+        Finally, in 2013, consumer debt skyrockets to levels well above the pre-crisis
+        numbers. Although Subprime credit approvals remain low, the staggering number of
+        loans approved for the remaining population could be foreshadowing another
+        crisis.
         */
         
     };
@@ -165,7 +263,7 @@ function DataModel() {
                 //Grab the info for each entry
                 dataObj['quarter'] = nested[i]['key'];
                 dataObj['creditCategory'] = nested[i]['values'][j]['key'];
-                dataObj[prop] = nested[i]['values'][j]['value'];
+                dataObj[prop] = nested[i]['values'][j]['values'];
                 dataArray.push(dataObj);
                 
             }
@@ -181,24 +279,15 @@ function DataModel() {
 //Entry point.
 function init() {
 
+    //Create new model.
     var dm = new DataModel();
+    
+    //Retrieve data.
     dm.getData();
-    //dm.drawChart();
+
 
 }
 
-function ChartGUI() {
-
-    var self = this;
-    
-}
-
-function eventGUI() {
-
-    var self = this;
-    
-    
-}
 
 /*Ranges:
 
