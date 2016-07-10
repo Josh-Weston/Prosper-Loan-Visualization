@@ -30,6 +30,35 @@ The amount of debt is terrifying. Those with Sub Prime credit scores stopped get
 
 No
 
+####Michael Hogan Feedback
+
+**What do you notice in the visualization?**
+
+Interest rates have been falling since 2011 while at the same time the total number of loans and total amount loaned have increased significantly for everyone with an acceptable credit score or higher. Total number of loans and amount loaned are 3-4 times higher than before the financial crisis of 2007 when banks were targeting sub prime credit scores for new loans, now they are targeting less risky, higher credit scores, but lending substantially more.
+
+The x-axis becomes squished when the story progresses.
+
+**What questions do you have about the data?**
+
+I would like to see more date into 2014 and to present to see if the drop in loans for Q1 2014 is a downward trend of the market correcting itself or is it just a seasonal trend like seen Q1 2013 and it will trend upwards Q2-4.
+
+**What relationships do you notice?**
+
+Amount loaned and number of new loans are related and move in the same direction, however since 2007, it looks like the debt has grown greater than the number of new loans which mean the average person is carrying more debt.
+
+**What questions do you have about the data?**
+
+N/A
+
+**What do you think is the main takeaway from this visualization?**
+
+Consumer debt is growing at an alarming rate
+
+**Is there something you don’t understand in the graphic?**
+
+I don’t understand how you made data look schmexy
+
+
 ##Resources
 
 **Discussion on how much data d3.js can handle**
