@@ -44,6 +44,6 @@ http://www.credit.org/what-is-a-good-credit-score-infographic/
 
 http://annapawlicka.com/pretty-charts-with-dimple-js/
 
-**Adding a vertical line to Dimplejs **
+**Adding a vertical line to Dimplejs**
 
 http://stackoverflow.com/questions/26358059/how-to-draw-a-vertical-line-with-dimple
