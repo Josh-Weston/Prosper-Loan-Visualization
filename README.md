@@ -1,10 +1,10 @@
 # Prosper Loan Visualization
-##Summary:
+##Summary
 In no more than 4 sentences, briefly introduce your visualization and add any context that can help readers understand it.
-##Design:
+##Design
 Explain any design choices you made, including changes to the visualization after collecting feedback.
-##Feedback:
-###Marcy Weston Feedback:###
+##Feedback
+####Marcy Weston Feedback
 
 **What do you notice in the visualization?**
 
@@ -30,7 +30,7 @@ The amount of debt is terrifying. Those with Sub Prime credit scores stopped get
 
 No
 
-##Resources:
+##Resources
 
 **Discussion on how much data d3.js can handle**
 
