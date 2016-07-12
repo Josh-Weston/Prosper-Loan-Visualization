@@ -4,7 +4,7 @@ In no more than 4 sentences, briefly introduce your visualization and add any co
 ##Design
 Explain any design choices you made, including changes to the visualization after collecting feedback.
 ##Feedback
-####Marcy Weston Feedback
+###Marcy Weston Feedback
 
 **What do you notice in the visualization?**
 
@@ -30,7 +30,7 @@ The amount of debt is terrifying. Those with Sub Prime credit scores stopped get
 
 No
 
-####Michael Hogan Feedback
+###Michael Hogan Feedback
 
 **What do you notice in the visualization?**
 
@@ -58,6 +58,17 @@ Consumer debt is growing at an alarming rate
 
 I don’t understand how you made data look schmexy
 
+###Hatim Ouhbi Feedback
+
+I like what you did with the vizualisation, it turned numbers that may seem boring to a lot of people into a story. the storytelling style made it very interesting and so easy to understand. It clearly shows that unless we change something, the next financial crisis will be a devastating one. In ADKAR words, the vizualisation created awareness and desire to make changes.
+
+**Looking at the graphs, my questions would be:** 
+
+What happened in 2013 Q4? all graphs are showing a decline
+
+Not sure if this is the kind of feedback you're looking for but relationships I notice are
+when interest rates decreased in Q1 2013, number of loans and amounts loaned have increased
+the amounts loaned and number of loans have very similar trends
 
 ##Resources
 
