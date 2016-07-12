@@ -1,8 +1,26 @@
 # Prosper Loan Visualization
 ##Summary
-In no more than 4 sentences, briefly introduce your visualization and add any context that can help readers understand it.
+This visualization depicts the rise and fall of consumer debt as impacted by the 2008 financial crisis. Specifically, Subprime lending is isolated as this category of lending was villainized as the root-cause. Through a storyboard type approach, the viewer is provided with context into consumer debt and the impact of the financial crisis.
+
+The data source comes from Prosper, was last updated on March 11, 2014, and provides information on ~114,000 loans which are used to make inferences about the entire debt market.
 ##Design
-Explain any design choices you made, including changes to the visualization after collecting feedback.
+From my initial sketch, I knew I wanted to use a line-chart to show the changes in consumer debt over time. Originally, I had thought about incorporating a histogram as a way to depict debt-levels across the various credit categories, but I thought it would distract from the main story. I knew I wanted to set-up the visualization like a story-board, and follow more of a martini-glass narrative structure where the user would be able to do some exploration of their own after the main story had completed. Some of the design choices include:
+
+###Before Feedback
+* Using pastel colours for the series as brighter colours may provide too much contrast.
+* Incorporating the solid black-bar to show when the crisis occured, which gives the view a "before and after" reference point.
+* Reduced the number of credit categories to 4, which makes it easier to view overall patterns without clutter.
+* Allow the user to click-through the story at their own rate, rather than advancing at set intervals.
+* Providing annotations to help guide the story.
+
+###After Feedback
+* Changed the subprime series colour to black to differentiate it from the other colours.
+* Fixed issues with the Interest Rate aggregations.
+* Added a quick "pop-up" when the story ends to direct users to explore on their own.
+* Changed the x-axis to be on a 45 angle, instead of completely horizontal so it would fit more.
+* Added a replay button
+* The vertical blackbar used as a reference line will not show-up on versions of Safari (unfortunately, I don't have a solution for this).
+
 ##Feedback
 ###Marcy Weston Feedback
 
