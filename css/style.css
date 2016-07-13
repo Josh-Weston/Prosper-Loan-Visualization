@@ -1,4 +1,10 @@
-/* Blank CSS File */
+
+body {
+
+    min-width: 1200px;
+    
+}
+
 .manual-tooltip {
     
     position: fixed;
@@ -66,6 +72,7 @@ h1, h4 {
     margin-top: 30px;
     display: inline-block;
     vertical-align: top;
+    position: relative;
 }
 
 button {
@@ -130,7 +137,7 @@ button {
 
 .subprime {
     
-    background-color: rgb(210, 107, 95);
+    background-color: rgb(0, 0, 0);
     
 }
 
@@ -183,3 +190,22 @@ button {
     
 }
 
+#btnReplay {
+    
+    position: absolute;
+    bottom: -40px;
+    
+}
+
+.pop-up {
+    
+    position: fixed;
+    background-image: url(../img/explore.png);
+    width: 250px;
+    height: 84px;
+    top: 175px;
+    left: 400px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    display: none;
+}

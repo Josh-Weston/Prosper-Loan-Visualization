@@ -93,32 +93,49 @@ function DataModel() {
                 .entries(data);
         
         self.totalData = self.flattenObject(nested, 'totalAmount');
-        
 
         //Interface Listeners
         d3.select('#btnNumberOfLoans').on('click', function() {
-            self.drawChart(self.countData, 'measureAxis', 'count', 'Total New Loans Issued (#)');
+            self.drawChart(self.countData, 'count', 'Total New Loans Issued (#)');
         });
         
         d3.select('#btnAverageInterestRate').on('click', function() {
-            self.drawChart(self.rateData, 'percent', 'rateAverage', 'Average Interest Rate Issued (%)');
+            self.drawChart(self.rateData, 'rateAverage', 'Average Interest Rate Issued (%)');
         });
         
         d3.select('#btnTotalAmountLoaned').on('click', function() {
-            self.drawChart(self.totalData, 'measureAxis', 'totalAmount', 'Total Amount Loaned ($)');
+            self.drawChart(self.totalData, 'totalAmount', 'Total Amount Loaned ($)');
+        });
+        
+        d3.select('#btnReplay').on('click', function() {
+            d3.select('#chart-area').html('').html('<div id="chart-area-cover">' +
+                '<div class="play-story">' +
+                    'Play Story<div class="play-button"></div>' +
+                    '<div>(click to advance the story)</div>' +
+                '</div>' +
+            '</div>');
+            
+            //Disable buttons again.
+            var buttons = document.getElementsByTagName('button');
+                
+            for (var i = 0, len = buttons.length; i < len; i++) {
+                buttons[i].disabled = true;
+            }
+            //Add new bindings after I wipe-out the chart-area-cover
+            d3.select('#chart-area-cover').on('click', function() {
+                self.viewStoryBoard(self.countData);
+            });
+            
         });
         
         d3.select('#chart-area-cover').on('click', function() {
             self.viewStoryBoard(self.countData);
         });
         
-        //Draw initial chart
-        //self.drawChart(self.countData, 'measureAxis', 'count', 'Total New Loans Issued (#)');
-        
     };
     
     /* Draw Function abstracted to avoid duplicate code */
-    self.drawChart = function(data, axisType, measure, yLabel, yFormat) {
+    self.drawChart = function(data, measure, yLabel, yFormat) {
         
         //Clear any prior chart.
         d3.select('#chart-area').html('');
@@ -132,17 +149,18 @@ function DataModel() {
         x.addOrderRule("quarter");
         x.title = "";
         
-        var y = axisType === 'percent' ? myChart.addPctAxis('y', measure) : myChart.addMeasureAxis('y', measure)
+        var y = myChart.addMeasureAxis('y', measure);
         y.title = yLabel;
         y.fontSize = "12px";
         
         var dataSeries = myChart.addSeries('creditCategory', dimple.plot.line);
         //var legend = myChart.addLegend(60, 10, 500, 20, "right");
-        myChart.assignColor('Subprime', 'rgb(210, 107, 95)');
+        //myChart.assignColor('Subprime', 'rgb(210, 107, 95)');
+        myChart.assignColor('Subprime', 'rgb(0, 0, 0)');
         myChart.assignColor('Acceptable', 'rgb(211, 150, 81)');
         myChart.assignColor('Good', 'rgb(149, 185, 87)');
         myChart.assignColor('Excellent', 'rgb(107, 148, 176)');
-               
+        
         /*Add 2008 crash reference line by creating a hidden y axis.*/
         var y2 = myChart.addPctAxis('y', "Dummy");
         y2.hidden = true;
@@ -210,7 +228,6 @@ function DataModel() {
     /* Click to walk-through */
     self.viewStoryBoard = function(data) {
         
-        console.log(data);
         //Start at scene 0;
         var sceneNum = 0,
             annotation = document.createElement('div');
@@ -271,7 +288,7 @@ function DataModel() {
                 this.afterDraw = undefined;
             };
             
-            myChart.assignColor('Subprime', 'rgb(210, 107, 95)');
+            myChart.assignColor('Subprime', 'rgb(0, 0, 0)');
             myChart.draw(1000);
             
         };
@@ -305,7 +322,6 @@ function DataModel() {
             };
 
             myChart.draw(1000);
-            
             
             //Remove reference line marker and change the line styling.
             d3.select(lineSeries._markers['dimple-financial-crisis'][0][0]).style('display', 'none');
@@ -374,6 +390,8 @@ function DataModel() {
             }
             
             myChart.draw(1000);
+            //Rotate the x-axis labels.
+            x.shapes.selectAll("text").attr("transform", "rotate(45)");
                         
         };
         
@@ -397,7 +415,7 @@ function DataModel() {
             dataSeries.afterDraw = function() {
                 
                 d3.select('#annotation').html('However, in an effort to stimulte the economy, consumers were ' +
-                                              'encouraged to borrow more and spend more. The resutling increased consumerism ' +
+                                              'encouraged to borrow more and spend more. The resulting increased consumerism ' +
                                               'caused a steady rise in consumer debt.')
                                         .style({
                                             top: '200px',
@@ -413,6 +431,8 @@ function DataModel() {
             myChart.assignColor('Excellent', 'rgb(107, 148, 176)');
             
             myChart.draw(1000);
+            //Rotate the x-axis labels.
+            x.shapes.selectAll("text").attr("transform", "rotate(45)");
             
         };
         
@@ -445,7 +465,9 @@ function DataModel() {
             
             //Add remaining entries.
             myChart.draw(1000);
-        
+            //Rotate the x-axis labels.
+            x.shapes.selectAll("text").attr("transform", "rotate(45)");
+            
         }
         
         var scenes = [preCrash, apex, postCrash, consumerism, skyrocket];
@@ -472,163 +494,18 @@ function DataModel() {
                 
                 d3.select('#annotation').style('display', 'none');
                 d3.selectAll('button').style('cursor', 'pointer');
+                d3.select('.pop-up').style('display', 'block');
+                
+                setTimeout(function() {
+                        
+                    d3.select('.pop-up').style('display', 'none');
+                
+                }, 2000)
 
             }
             
         });
-
                 
-        
-        
-        
-        
-        
-        
-    
-
-        
-
-        
-
-        
-
-        
-
-        
-        //var legend = myChart.addLegend(60, 10, 500, 20, "right");
-        //myChart.assignColor('Acceptable', 'rgb(211, 150, 81)');
-        //myChart.assignColor('Good', 'rgb(149, 185, 87)');
-        //myChart.assignColor('Excellent', 'rgb(107, 148, 176)');
-        
-        //myChart.assignColor("Coolio", "red", "black", 1); We can set the opacity.
-        
-        
-        /*
-        setTimeout(function() {
-            
-            
-            
-            
-        
-        var y2 = myChart.addPctAxis('y', "Dummy");
-        y2.hidden = true;
-        
-        var lineSeries = myChart.addSeries("FinancialCrisis", dimple.plot.area, [x, y2]);
-        lineSeries.lineWeight = 5;
-        
-        lineSeries.data = [{
-            FinancialCrisis: "Financial Crisis",
-            Dummy: 1,
-            quarter: "2008 Q4"
-        }]
-        
-        myChart.draw(100);
-            
-            
-            d3.select('#annotation').html('The financial crisis reached its apex at the end of 2008. ' + 
-                                          'Many consumers lost their jobs and their homes, while financial ' +
-                                          'institutions struggled to stay solvent.')
-                                    .style('left', '1000px')
-            
-            
-            
-            
-            
-            
-            setTimeout(function() {
-                
-                
-                for (var i = 0, len = subPrime.length; i < len; i++) {
-
-                    if (subPrime[i]['quarter'] >= '2009 Q1') {
-                        preCrash.push(subPrime[i]);
-                    }
-
-                }
-                
-                
-                dataSeries.afterDraw = function() {
-
-                
-                d3.select('#annotation').html('In response to the crisis, Subprime loans fell out of favour and would not ' +
-                                              'return to pre-crisis levels.')
-                        .style({
-                            left: '900px',
-                            top: '475px'
-                        });
-                    
-                }
-                
-                
-                
-                myChart.draw(1000);
-                
-                
-                
-                
-            }, 1000);
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-        }, 1000);
-        
-        //myChart.data = newDataset
-        
-        
-        */
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-
-        
-        
- 
-        
-        //div.style.top = top + 'px';
-        //div.style.left = left + 'px';
-
-        
-        /*
-        The financial crisis reached its apex at the end of 2008. Many consumers
-        lost their jobs and their homes, while financial institutions struggled
-        to stay solvent.
-        */
-        
-        /*
-        In response to the crisis, Subprime loans fell out of favour and would not
-        return to pre-crisis levels. */
-        
-        /*
-        To stimulte the economy, interest rates were reduced while consumers were
-        encouraged to spend more. The resulting low rates and increased consumerism
-        caused a steady rise in consumer debt.
-        */
-        
-        /*
-        Finally, in 2013, consumer debt skyrockets to levels well above the pre-crisis
-        numbers. Although Subprime credit approvals remain low, the staggering number of
-        loans approved for the remaining population could be foreshadowing another
-        crisis.
-        */
-        
     };
     
     /*Dimple.js will not handle nested JSON objects. Need to flatten for each view.
@@ -652,6 +529,7 @@ function DataModel() {
             }
 
         }
+        
         return dataArray;
         
     };
@@ -667,16 +545,4 @@ function init() {
     
     //Retrieve data.
     dm.getData();
-
-
 }
-
-
-/*Ranges:
-
-<620 Poor/Subprime
-620 - 680 = Acceptable
-680 to 740 = Good Credit
-740 to 850 = Excellent Credit
-
-*/
